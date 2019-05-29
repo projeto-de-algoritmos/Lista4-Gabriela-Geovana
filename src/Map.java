@@ -3,6 +3,15 @@ import java.util.ArrayList;
 public class Map {
 	private ArrayList<Element> elements;
 	
+	Map(){
+		elements = new ArrayList<>();
+	}
+	
+	public void addElement(int x, int y, int type) {
+		Element element = new Element(x, y, type);
+		elements.add(element);
+	}
+	
 	
 	//public ArrayList<Element> closestPair(ArrayList<Element> elements){
 		// Elements must be sorted according to x-coordinate.

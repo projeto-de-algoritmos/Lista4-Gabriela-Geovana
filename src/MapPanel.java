@@ -10,10 +10,12 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class MapPanel extends JPanel{
+	private Map map;
 	
 	public MapPanel() {
 		
 		setBackground(Color.GRAY);
+		map = new Map();
 		
 		addMouseListener(new MouseAdapter() {
             @Override
@@ -40,6 +42,7 @@ public class MapPanel extends JPanel{
 	    for(int n=0; n<15; n++) {
 	    	x = rdm.nextInt(1100);
 	    	y = rdm.nextInt(650);
+	    	map.addElement(x, y, Element.CAR);
 	    		
 	    	GeneralPath gp = new GeneralPath();
 	    	gp.moveTo(x,y); //start here
@@ -64,6 +67,7 @@ public class MapPanel extends JPanel{
 	    for(int n=0; n<15; n++) {
 	    	x = rdm.nextInt(1100);
 	    	y = rdm.nextInt(650);
+	    	map.addElement(x, y, Element.PERSON);
 	    	
 	    	// the head
 	        g2.drawOval(x,y,10,10);
