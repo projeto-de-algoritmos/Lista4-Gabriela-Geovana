@@ -1,15 +1,38 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
-public class Map {
-	private ArrayList<Element> elements;
+public enum Map {
+	INSTANCE;
+	public static final int SIZE = 15;
+	private ArrayList<Element> elements =  new ArrayList<>();
+	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
 	
-	Map(){
+	public void reset(){
 		elements = new ArrayList<>();
+		pairs = new HashMap<Element, Element>();
 	}
 	
 	public void addElement(int x, int y, int type) {
 		Element element = new Element(x, y, type);
 		elements.add(element);
+	}
+	
+	public void sortByX() {
+		Collections.sort(elements, new Comparator<Element>() {
+		    public int compare(Element e1, Element e2) {
+		        return Integer.compare(e1.getX(), e2.getY());
+		    }
+		});
+	}
+	
+	public boolean arePairsComplete() {
+		
+		if(pairs.size() == SIZE)
+			return true;
+		
+		return false;
 	}
 	
 	//TODO TRANSFORMAR PSEUDOCODIGO EM CODIGO

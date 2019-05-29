@@ -15,7 +15,6 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JButton btnRandom;
 	private JButton btnSolution;
 	private MapPanel mapPanel;
-	private Map map;
 
 	public MainFrame() {
 
@@ -49,23 +48,27 @@ public class MainFrame extends JFrame implements ActionListener{
 		contentPane.add(Box.createRigidArea(new Dimension(10, 10)));
 		
 		//Map of drivers
-		map = new Map();
-		mapPanel = new MapPanel(map);
+		mapPanel = new MapPanel();
 		contentPane.add(mapPanel);
 	
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Map map = Map.INSTANCE;
 		if(e.getSource() == btnRandom) {
 			mapPanel.repaint();
 			mapPanel.revalidate();
 		} else {
-			//TODO ORDENAR LISTA PELA COORDENADA X
-			//TODO CHAMAR CLOSEST PAIR OF POINTS
-			//TODO CHAMAR ENQUANTO HOUVER PAR SEM LIGAÇÃO
+			map.sortByX();
+			if(!map.arePairsComplete()) {
+				//TODO CHAMAR CLOSEST PAIR OF POINTS
+				//TODO DELETAR DA LISTA OS PONTOS MAIS PRÓXIMOS	
+			}
 		}
 	}
+	
+	
 
 	
 }

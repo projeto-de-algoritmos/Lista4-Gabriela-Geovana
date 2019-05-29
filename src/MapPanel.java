@@ -8,11 +8,9 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class MapPanel extends JPanel{
-	private Map map;
 	
-	public MapPanel(Map map) {
+	public MapPanel() {
 		setBackground(Color.GRAY);
-		this.map = map;
 	}
 	
 	@Override
@@ -25,9 +23,11 @@ public class MapPanel extends JPanel{
 	    int y;
 	    
 	    Random rdm = new Random();
+	    Map map = Map.INSTANCE;
+	    map.reset();
 	    
 	    // Car drawing 
-	    for(int n=0; n<15; n++) {
+	    for(int n=0; n<Map.SIZE; n++) {
 	    	x = rdm.nextInt(1100);
 	    	y = rdm.nextInt(650);
 	    	map.addElement(x, y, Element.CAR);
@@ -52,7 +52,7 @@ public class MapPanel extends JPanel{
 	    }
 	    
 	    // Person drawing
-	    for(int n=0; n<15; n++) {
+	    for(int n=0; n<Map.SIZE; n++) {
 	    	x = rdm.nextInt(1100);
 	    	y = rdm.nextInt(650);
 	    	map.addElement(x, y, Element.PERSON);
