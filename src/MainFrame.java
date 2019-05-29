@@ -11,7 +11,8 @@ public class MainFrame extends JFrame {
 	
 	private JPanel contentPane;
 	private JButton btnRandom;
-	private MapPanel map;
+	private MapPanel mapPanel;
+	private Map map;
 
 	public MainFrame() {
 
@@ -43,9 +44,9 @@ public class MainFrame extends JFrame {
 		contentPane.add(Box.createRigidArea(new Dimension(10, 10)));
 		
 		//Map of drivers
-		map = new MapPanel();
-		contentPane.add(map);
-		
+		map = new Map();
+		mapPanel = new MapPanel(map);
+		contentPane.add(mapPanel);
 	
 	}
 

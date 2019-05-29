@@ -1,8 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.GeneralPath;
 import java.util.Random;
 
@@ -12,19 +10,9 @@ import javax.swing.JPanel;
 public class MapPanel extends JPanel{
 	private Map map;
 	
-	public MapPanel() {
-		
+	public MapPanel(Map map) {
 		setBackground(Color.GRAY);
-		map = new Map();
-		
-		addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-            	//Passenger chose location
-            	//drawPassenger();
-          
-            }
-        });
+		this.map = map;
 	}
 	
 	@Override
