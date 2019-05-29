@@ -5,12 +5,15 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener{
 	
 	private JPanel contentPane;
 	private JButton btnRandom;
+	private JButton btnSolution;
 	private MapPanel mapPanel;
 	private Map map;
 
@@ -30,15 +33,17 @@ public class MainFrame extends JFrame {
 		// Generate random drivers and stickmen
 		btnRandom = new JButton("Randomizar dados");
 		btnRandom.setAlignmentX(CENTER_ALIGNMENT);
+		btnRandom.addActionListener(this);
 		contentPane.add(btnRandom);
 		
 		// Separating button from button
 		contentPane.add(Box.createRigidArea(new Dimension(10, 10)));
 
 		// Generate solution
-		btnRandom = new JButton("Mostrar pares de carona");
-		btnRandom.setAlignmentX(CENTER_ALIGNMENT);
-		contentPane.add(btnRandom);
+		btnSolution = new JButton("Mostrar pares de carona");
+		btnSolution.setAlignmentX(CENTER_ALIGNMENT);
+		btnSolution.addActionListener(this);
+		contentPane.add(btnSolution);
 		
 		// Separating button from pane
 		contentPane.add(Box.createRigidArea(new Dimension(10, 10)));
@@ -48,6 +53,16 @@ public class MainFrame extends JFrame {
 		mapPanel = new MapPanel(map);
 		contentPane.add(mapPanel);
 	
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == btnRandom) {
+			mapPanel.repaint();
+			mapPanel.revalidate();
+		} else {
+			
+		}
 	}
 
 	
