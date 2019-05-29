@@ -61,7 +61,9 @@ public class MainFrame extends JFrame implements ActionListener{
 			mapPanel.repaint();
 			mapPanel.revalidate();
 		} else {
-			
+			//TODO ORDENAR LISTA PELA COORDENADA X
+			//TODO CHAMAR CLOSEST PAIR OF POINTS
+			//TODO CHAMAR ENQUANTO HOUVER PAR SEM LIGAÇÃO
 		}
 	}
 

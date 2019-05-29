@@ -12,7 +12,7 @@ public class Map {
 		elements.add(element);
 	}
 	
-	
+	//TODO TRANSFORMAR PSEUDOCODIGO EM CODIGO
 	//public ArrayList<Element> closestPair(ArrayList<Element> elements){
 		// Elements must be sorted according to x-coordinate.
 		
@@ -27,9 +27,10 @@ public class Map {
 		
 		// Sort remaining points by y-coordinate.
 		
-		//Scan points in y-order and compare distance between
-		//each point and next 6 neighbors. If any of these
-		//distances is less than c3 , update c3.
+		// Scan points in y-order and compare distance between
+		// each point (IF they have different types)
+		// and next 6 neighbors. If any of these
+		// distances is less than c3 , update c3.
 		
 		//return c3;
 	//}
