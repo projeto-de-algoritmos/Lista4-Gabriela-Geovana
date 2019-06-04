@@ -62,6 +62,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		} else {
 			map.sortByX();
 			if(!map.arePairsComplete()) {
+				map.closestPair();
 				//TODO CHAMAR CLOSEST PAIR OF POINTS
 				//TODO DELETAR DA LISTA OS PONTOS MAIS PRÓXIMOS	
 			}
