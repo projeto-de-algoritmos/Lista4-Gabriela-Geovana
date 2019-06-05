@@ -2,12 +2,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 
 public enum Map {
 	INSTANCE;
 	public static final int SIZE = 15;
-	private ArrayList<Element> elements =  new ArrayList<>();
+	public ArrayList<Element> elements =  new ArrayList<>();
 	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
+	private Integer minorDistanceL;
+	private Integer minorDistanceR;
+	private Float minorDistance;
+	private ArrayList<Element> pair = new ArrayList<Element>();
 		
 	public void reset(){
 		elements = new ArrayList<>();
@@ -27,6 +33,25 @@ public enum Map {
 		});
 	}
 	
+	public ArrayList<Element> sortByY(ArrayList<Element> elements) {
+		Collections.sort(elements, new Comparator<Element>() {
+		    public int compare(Element e1, Element e2) {
+		        return Integer.compare(e1.getY(), e2.getY());
+		    }
+		});
+		
+		return elements;
+	}
+	
+	public Float min(Float num1, Float num2) {
+		if(num1 < num2) {
+			return num1;
+		}
+		else {
+			return num2;
+		}
+	}
+	
 	public boolean arePairsComplete() {
 		
 		if(pairs.size() == SIZE)
@@ -35,89 +60,94 @@ public enum Map {
 		return false;
 	}
 	
-//	private Float getMedian(ArrayList<Element> elements) {
-//		if (isPair(elements.size()))
-//			return (float) ((elements.get((Integer)elements.size()/2).getX() + (elements.get(((Integer)elements.size()/2) + 1)).getX())/2);
-//		else
-//			return (float) elements.get(((Integer)elements.size()/2) + 1).getX();
-//	}
-/*	
-	private Element medianOfMedians(ArrayList<Element> elements) {
-		ArrayList<Element> subGroups = new ArrayList<Element>();		
-		for(int j=0; j<elements.size(); j++) {		
-			ArrayList<Element> fiveGroup = new ArrayList<Element>();
-			for(int i=0; (i<5 && ((j*5 + i + 1) <= elements.size())); i++){
-				fiveGroup.add(elements.get(j));
-			}
-			Element median = getMedian(elements);
-			subGroups.add(median);
-		}
-		return getMedian(subGroups);
-	}*/
-	
-	private Element kthSmallest(ArrayList<Element> itens, Integer index){
-		return itens.get(index);
-	}	
-	
-	private Element oracle(){
-		Element mom;
-		int j = 0;
-		
-		System.out.println("Elements");
-		for(int i=0; i<elements.size(); i++) {
-			System.out.println("Elem" + i + ": " + elements.get(i).getX());
-		}		
-		
-		ArrayList<Element> subGroups = new ArrayList<Element>();
-		
-		while(j < elements.size()) {
-			ArrayList<Element> fiveGroup = new ArrayList<Element>();
-			for(int i = 0; i < 5 && j < elements.size(); i++){
-				fiveGroup.add(elements.get(j));
-				j++;
-			}
-			subGroups.add(kthSmallest(elements, elements.size()/2));			
-		}
-		
-		mom = kthSmallest(subGroups, subGroups.size()/2);				
-		System.out.println("Median Of Medians: " + mom.getX());		
-		elements.indexOf(mom);
-		
-		return mom;
+	private float distance(Element element1, Element element2){
+		    return (float) sqrt(
+		    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
+		                 (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
+		               );
 	}
 	
-	private Element exotericSelection(ArrayList<Element> items, Integer index) {
-		Integer position;
+	private float bruteForce(ArrayList<Element> elements){ 
+	    float min = 6000; 
+	    for (int i = 0; i < elements.size(); ++i) 
+	        for (int j = i+1; j < elements.size(); ++j) 
+	            if (distance(elements.get(i), elements.get(j)) < min) 
+	                min = distance(elements.get(i), elements.get(j)); 
+	    return min; 
+	}
+	
+	private Float getMedianPoint(ArrayList<Element> elements) {
+		if (elements.size() % 2 == 0 && elements.size() != 2) {
+			Integer d = elements.get(elements.size()/2).getX() - elements.get(elements.size()/2 - 1).getX();
+			return (float) elements.get(elements.size()/2 - 1).getX() + (d/2);
+		}
+		else {
+			return (float) (elements.get(elements.size()/2).getX());
+		}
+	}
+	
+	public Float closestPair(ArrayList<Element> elements){
+//		System.out.println("Tam Elemenst:" + elements.size());
+//		for(int i=0; i<elements.size(); i++) {
+//			System.out.println("Elem" + i + ": " + elements.get(i).getX());
+//		}
+//		
+		if(elements.size() == 3 || elements.size() == 2) {
+			return (float) bruteForce(elements);
+		}
+		else if(elements.size() == 1) {
+			return (float) 6000;
+		}
+
+		Float medianPoint = getMedianPoint(elements);
+		
+//		System.out.println("MedianPoint: " + medianPoint);
+		
 		ArrayList<Element> left = new ArrayList<Element>();
 		ArrayList<Element> right = new ArrayList<Element>();
 		
-		Element mom = oracle();
-		position = items.indexOf(mom);
-		
-		for(int i = 0; i < items.size(); i++) {
-			if(i < position) {
-				left.add(items.get(i));
+		for(int i = 0; i < elements.size(); i++) {
+			if(elements.get(i).getX() < medianPoint) {				
+				left.add(elements.get(i));
 			}
-			else if(i > position){
-				right.add(items.get(i));
-			}			
+			else{				
+				right.add(elements.get(i));
+			}
 		}
 		
-		if(left.size() == index-1) {
-			return mom;
+		minorDistance = min(closestPair(left), closestPair(right));
+		
+		ArrayList<Element> strip = new ArrayList<Element>();
+		ArrayList<Element> sortedElementsByY = sortByY(elements);
+		for(int i = 0; i < elements.size(); i++) {
+			if((abs(sortedElementsByY.get(i).getX() - medianPoint)) < minorDistance) {
+				strip.add(sortedElementsByY.get(i));
+			}
 		}
-		else if(left.size() > index-1) {
-			exotericSelection(left, index);
+		
+		for (int i = 0; i < strip.size(); i++) {
+			for (int j = (i + 1); j <= (i + 6) && (i + j < strip.size()); j++) {
+				float distanceCompare = distance(strip.get(i), strip.get(j));
+				if(min(minorDistance, distanceCompare) == distanceCompare) {
+					minorDistance = distanceCompare;
+				}
+			}
 		}
-		else {
-			exotericSelection(right, index - left.size() - 1);
-		}
-		return null;
+		return minorDistance;
 		
 	}
 	
-	//TODO TRANSFORMAR PSEUDOCODIGO EM CODIGO
-	public void closestPair(){
-		exotericSelection(elements, 1/2);
+	public void printDistances() {
+		float min = 6000;
+		for (int i = 0; i < elements.size(); i++) {
+			for (int j = (i+1); j < elements.size(); j++) {
+				//System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));
+				if(distance(elements.get(i), elements.get(j)) < min){
+					min = distance(elements.get(i), elements.get(j));
+				}
+			}
+		}
+		
+		System.out.println("Menor: " + min);
 	}
 }
