@@ -10,8 +10,7 @@ public enum Map {
 	public static final int SIZE = 15;
 	public ArrayList<Element> elements =  new ArrayList<>();
 	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
-	private Float minorDistance = (float) 10000;
-	private Float minorDistanceTemp;
+	public Float minorDistance = (float) 10000;
 	public Float minorDistanceHashMap = (float) 10000;
 	public HashMap<String , Element> pair = new HashMap<String, Element>(); 
 
