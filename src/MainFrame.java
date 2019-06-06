@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @SuppressWarnings("serial")
@@ -70,7 +71,8 @@ public class MainFrame extends JFrame implements ActionListener{
 				map.minorDistance = (float)10000;		
 				map.printDistances();
 				
-				System.out.println("Menor distancia: " + map.closestPair(map.getElements()));
+				map.closestPair(map.getElements());
+				System.out.println("Menor distancia: " + map.distanceTeste(map.getPairs().get("One"), map.getPairs().get("Two")));
 				
 				pairs.put(map.getPairs().get("One"), map.getPairs().get("Two"));
 				map.removePair(map.getPairs().get("One"), map.getPairs().get("Two"));

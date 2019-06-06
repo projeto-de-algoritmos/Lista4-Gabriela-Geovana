@@ -75,22 +75,17 @@ public enum Map {
 			
 	    return result;
 	}
-	private void addInHashMap(Element one, Element two) {
-		float d = distanceTeste(one, two);
-//		System.out.println("Entrou: " + d);
+	private void addInHashMap(Element element1, Element element2) {
+		float d = distanceTeste(element1, element2);
 		if(d < minorDistanceHashMap) {
-			//System.out.println("1:" + minorDistance + " 2:" + distanceTeste(one, two));
-			pairs.put("One", one);
-			pairs.put("Two", two);
+			pairs.put("One", element1);
+			pairs.put("Two", element2);
 			
 			minorDistanceHashMap = d;
-			
-//			System.out.println("ADD: (" + one.getX() + "," + one.getY() + 
-//					  "), (" +	two.getX() + "," + two.getY() + "): " + d);
 		}
 	}
 	
-	private float distanceTeste(Element element1, Element element2){
+	public float distanceTeste(Element element1, Element element2){
 		float result = (float) sqrt(
    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
              (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
@@ -148,11 +143,6 @@ public enum Map {
 	}
 
 	public Float closestPair(ArrayList<Element> elements){
-//		for(int i=0; i<elements.size(); i++) {
-//			System.out.println("Elem (" + elements.get(i).getX() + ", " + elements.get(i).getY() + ")");
-//		}
-//		System.out.println("__________________________________________");
-		
 		if(elements.size() == 3 || elements.size() == 2) {
 			minorDistance = bruteForce(elements);
 			return minorDistance;
@@ -163,25 +153,17 @@ public enum Map {
 
 		Float medianPoint = getMedianPoint(elements);
 		
-		
-//		System.out.println("MedianPoint: " + medianPoint);
-		
-//		System.out.println("MD1: " + minorDistance);
-		
 		ArrayList<Element> left = new ArrayList<Element>();
 		ArrayList<Element> right = new ArrayList<Element>();
 		
 		for(int i = 0; i < elements.size(); i++) {
 			if(elements.get(i).getX() <= medianPoint) {
-				//System.out.println("Elem" + i + " - Left ");
 				left.add(elements.get(i));
 			}
 			else{				
 				right.add(elements.get(i));
-				//System.out.println("Elem" + i + " - Right ");
 			}
 		}
-//		System.out.println("MDA2: " + minorDistance);
 		
 		float dl = closestPair(left);
 		float dr = closestPair(right);
@@ -191,15 +173,12 @@ public enum Map {
 			minorDistance = dis;
 		}
 		
-//		System.out.println("MD2: " + minorDistance);
-		
 		ArrayList<Element> strip = new ArrayList<Element>();		
 		for(int i = 0; i < elements.size(); i++) {
 			if((abs(elements.get(i).getX() - medianPoint)) <= minorDistance) {
 				strip.add(elements.get(i));
 			}
 		}
-//		System.out.println("MD3: " + minorDistance);
 		return min(minorDistance, stripClosest(strip));
 		
 	}
@@ -208,14 +187,12 @@ public enum Map {
 		float min = 10000;
 		for (int i = 0; i < elements.size() -1; i++) {
 			for (int j = (i+1); j < elements.size(); j++) {
-//				System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));
-				
+//				System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));	
 //				System.out.println("Dist�ncia: (" + elements.get(i).getX() + "," + elements.get(i).getY() + 
 //						  "), (" +	elements.get(j).getX() + "," + elements.get(j).getY() + ") : " + 
 //						   distanceTeste(elements.get(i), elements.get(j)));
-				
-				System.out.println("Dist�ncia: (" + elements.get(i).getType() + "," + elements.get(j).getType() + ") : " + 
-						   distanceTeste(elements.get(i), elements.get(j)));
+//				System.out.println("Dist�ncia: (" + elements.get(i).getType() + "," + elements.get(j).getType() + ") : " + 
+//						   distanceTeste(elements.get(i), elements.get(j)));
 				
 				
 				if(distanceTeste(elements.get(i), elements.get(j)) < min && elements.get(i).getType() != elements.get(j).getType()){
