@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements ActionListener{
@@ -15,6 +16,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JButton btnRandom;
 	private JButton btnSolution;
 	private MapPanel mapPanel;
+	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
 
 	public MainFrame() {
 
@@ -57,32 +59,33 @@ public class MainFrame extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Map map = Map.INSTANCE;
 		if(e.getSource() == btnRandom) {
+			pairs = new HashMap<Element, Element>();
+			mapPanel.setPairs(null);
 			mapPanel.repaint();
 			mapPanel.revalidate();
 		} else {
 			map.sortByX();
-			if(!map.arePairsComplete()) {
-//				for(int i=0; i<map.elements.size(); i++) {
-//					System.out.println("Elem" + i + ": " + map.elements.get(i).getX());
-//				}
+			while(!arePairsComplete()) {
 				map.minorDistanceHashMap = (float)10000;
 				map.minorDistance = (float)10000;		
 				map.printDistances();
 				
-				System.out.println("Menor distancia: " + map.closestPair(map.elements));
+				System.out.println("Menor distancia: " + map.closestPair(map.getElements()));
 				
-				//Para pegar os elementos selecionados usar esse hashMap
-				System.out.println("Par: (" + ((Element)map.pair.get("primaryPair")).getType() + "," + ((Element)map.pair.get("secondPair")).getType() + ")");
-				
-//				System.out.println("Par: (" + ((Element)map.pair.get("primaryPair")).getX() + "," + ((Element)map.pair.get("primaryPair")).getY() + 
-//								  "), (" +	((Element)map.pair.get("secondPair")).getX() + "," + ((Element)map.pair.get("secondPair")).getY() + ")");
-				//TODO DELETAR DA LISTA OS PONTOS MAIS PRÃ“XIMOS	
-				//TODO FAZER LOOP PARA FAZER PRÓXIMO MENOR PONTO
+				pairs.put(map.getPairs().get("One"), map.getPairs().get("Two"));
+				map.removePair(map.getPairs().get("One"), map.getPairs().get("Two"));
 			}
+			mapPanel.setPairs(pairs);
+			mapPanel.repaint();
 		}
 	}
 	
+	public boolean arePairsComplete() {		
+		if(pairs.size() == Map.SIZE)
+			return true;
+		
+		return false;
+	}
 	
-
 	
 }

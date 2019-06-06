@@ -8,15 +8,27 @@ import static java.lang.Math.sqrt;
 public enum Map {
 	INSTANCE;
 	public static final int SIZE = 15;
-	public ArrayList<Element> elements =  new ArrayList<>();
-	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
+	private ArrayList<Element> elements =  new ArrayList<>();
+	private HashMap<String, Element> pairs = new HashMap<String, Element>();
 	public Float minorDistance = (float) 10000;
-	public Float minorDistanceHashMap = (float) 10000;
-	public HashMap<String , Element> pair = new HashMap<String, Element>(); 
+	public Float minorDistanceHashMap = (float) 10000; 
+
+	public HashMap<String, Element> getPairs() {
+		return pairs;
+	}
+
+	public void setPairs(HashMap<String, Element> pairs) {
+		this.pairs = pairs;
+	}
 
 	public void reset(){
 		elements = new ArrayList<>();
-		pairs = new HashMap<Element, Element>();
+		pairs = new HashMap<String, Element>();
+	}
+	
+	public void removePair(Element el1, Element el2) {
+		elements.remove(el1);
+		elements.remove(el2);
 	}
 	
 	public void addElement(int x, int y, int type) {
@@ -51,13 +63,6 @@ public enum Map {
 		}
 	}
 	
-	public boolean arePairsComplete() {		
-		if(pairs.size() == SIZE)
-			return true;
-		
-		return false;
-	}
-	
 	private float distance(Element element1, Element element2){
 		float result = (float) sqrt(
    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
@@ -75,8 +80,8 @@ public enum Map {
 //		System.out.println("Entrou: " + d);
 		if(d < minorDistanceHashMap) {
 			//System.out.println("1:" + minorDistance + " 2:" + distanceTeste(one, two));
-			pair.put("primaryPair", one);
-			pair.put("secondPair", two);
+			pairs.put("One", one);
+			pairs.put("Two", two);
 			
 			minorDistanceHashMap = d;
 			
@@ -134,6 +139,14 @@ public enum Map {
 		return minorDistance;
 	}
 	
+	public ArrayList<Element> getElements() {
+		return elements;
+	}
+
+	public void setElements(ArrayList<Element> elements) {
+		this.elements = elements;
+	}
+
 	public Float closestPair(ArrayList<Element> elements){
 //		for(int i=0; i<elements.size(); i++) {
 //			System.out.println("Elem (" + elements.get(i).getX() + ", " + elements.get(i).getY() + ")");
@@ -197,19 +210,15 @@ public enum Map {
 			for (int j = (i+1); j < elements.size(); j++) {
 //				System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));
 				
-//				System.out.println("Distância: (" + elements.get(i).getX() + "," + elements.get(i).getY() + 
+//				System.out.println("Distï¿½ncia: (" + elements.get(i).getX() + "," + elements.get(i).getY() + 
 //						  "), (" +	elements.get(j).getX() + "," + elements.get(j).getY() + ") : " + 
 //						   distanceTeste(elements.get(i), elements.get(j)));
 				
-				System.out.println("Distância: (" + elements.get(i).getType() + "," + elements.get(j).getType() + ") : " + 
+				System.out.println("Distï¿½ncia: (" + elements.get(i).getType() + "," + elements.get(j).getType() + ") : " + 
 						   distanceTeste(elements.get(i), elements.get(j)));
 				
 				
 				if(distanceTeste(elements.get(i), elements.get(j)) < min && elements.get(i).getType() != elements.get(j).getType()){
-					Element element1 = elements.get(i);
-					Element element2 = elements.get(j);
-					
-					
 					min = distanceTeste(elements.get(i), elements.get(j));
 				}
 			}
