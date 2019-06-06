@@ -10,7 +10,9 @@ public enum Map {
 	public static final int SIZE = 15;
 	public ArrayList<Element> elements =  new ArrayList<>();
 	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
-	private Float minorDistance = (float) 6000;
+	private Float minorDistance = (float) 10000;
+	public Float minorDistanceHashMap = (float) 10000;
+	public HashMap<String , Element> pair = new HashMap<String, Element>(); 
 		
 	public void reset(){
 		elements = new ArrayList<>();
@@ -57,23 +59,55 @@ public enum Map {
 	}
 	
 	private float distance(Element element1, Element element2){
-	    return (float) sqrt(
-	    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
-	                 (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
-	               );
+		float result = (float) sqrt(
+   			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
+             (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
+           );
+		
+		if (result < minorDistanceHashMap) {
+			addInHashMap(element1, element2);
+		}
+			
+	    return result;
 	}
 	
+	private void addInHashMap(Element one, Element two) {
+		float d = distanceTeste(one, two);
+		System.out.println("Entrou: " + d);
+		if(d < minorDistanceHashMap) {
+			//System.out.println("1:" + minorDistance + " 2:" + distanceTeste(one, two));
+			pair.put("primaryPair", one);
+			pair.put("secondPair", two);
+			
+			minorDistanceHashMap = d;
+			
+			System.out.println("ADD: (" + one.getX() + "," + one.getY() + 
+					  "), (" +	two.getX() + "," + two.getY() + "): " + d);
+		}
+	}
+	
+	private float distanceTeste(Element element1, Element element2){
+		float result = (float) sqrt(
+   			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
+             (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
+           );
+			
+	    return result;
+	}
+
 	private float bruteForce(ArrayList<Element> elements){ 
 	    float min = 10000; 
 	    for (int i = 0; i < (elements.size() - 1); ++i) {
 	        for (int j = i + 1; j < elements.size(); ++j) { 
 	            if (distance(elements.get(i), elements.get(j)) < min) {
+	            	addInHashMap(elements.get(i), elements.get(j));
 	                min = distance(elements.get(i), elements.get(j));
 	            }
 	        }
 	    }
 	    return min; 
 	}
+	
 	
 	private Float getMedianPoint(ArrayList<Element> elements) {
 		if (elements.size() % 2 == 0 && elements.size() != 2) {
@@ -90,9 +124,8 @@ public enum Map {
 		
 		for (int i = 0; i < stripSortedByY.size(); ++i) {
 			for (int j = i + 1; j < stripSortedByY.size() && ((stripSortedByY.get(j).getY() - strip.get(i).getY()) < minorDistance); ++j) {
-				if (distance(stripSortedByY.get(i), stripSortedByY.get(j)) < minorDistance) {
-					minorDistance = distance(stripSortedByY.get(i), stripSortedByY.get(j));
-				}
+				minorDistance = distance(stripSortedByY.get(i), stripSortedByY.get(j));
+				//addInHashMap(stripSortedByY.get(i), stripSortedByY.get(j));
 			}
 		}
 		
@@ -160,10 +193,19 @@ public enum Map {
 		float min = 10000;
 		for (int i = 0; i < elements.size() -1; i++) {
 			for (int j = (i+1); j < elements.size(); j++) {
-				//System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));
-				//System.out.println("Distância (" + i + ", " + j + "): " + distance(elements.get(i), elements.get(j)));
-				if(distance(elements.get(i), elements.get(j)) < min){
-					min = distance(elements.get(i), elements.get(j));
+//				System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));
+				
+				System.out.println("Distância: (" + elements.get(i).getX() + "," + elements.get(i).getY() + 
+						  "), (" +	elements.get(j).getX() + "," + elements.get(j).getY() + ") : " + 
+						   distanceTeste(elements.get(i), elements.get(j)));
+				
+				
+				if(distanceTeste(elements.get(i), elements.get(j)) < min){
+					Element element1 = elements.get(i);
+					Element element2 = elements.get(j);
+					
+					
+					min = distanceTeste(elements.get(i), elements.get(j));
 				}
 			}
 		}
