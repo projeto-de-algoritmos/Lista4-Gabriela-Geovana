@@ -62,10 +62,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		} else {
 			map.sortByX();
 			if(!map.arePairsComplete()) {
-				System.out.println("Menor distancia: " + map.closestPair(map.elements));
-				
-				System.out.println("---------------------------------------------------------------");
+//				for(int i=0; i<map.elements.size(); i++) {
+//					System.out.println("Elem" + i + ": " + map.elements.get(i).getX());
+//				}
 				map.printDistances();
+				System.out.println("Menor distancia: " + map.closestPair(map.elements));
 				//TODO DELETAR DA LISTA OS PONTOS MAIS PRÓXIMOS	
 			}
 		}

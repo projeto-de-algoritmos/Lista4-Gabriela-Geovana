@@ -10,10 +10,7 @@ public enum Map {
 	public static final int SIZE = 15;
 	public ArrayList<Element> elements =  new ArrayList<>();
 	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
-	private Integer minorDistanceL;
-	private Integer minorDistanceR;
-	private Float minorDistance;
-	private ArrayList<Element> pair = new ArrayList<Element>();
+	private Float minorDistance = (float) 6000;
 		
 	public void reset(){
 		elements = new ArrayList<>();
@@ -52,8 +49,7 @@ public enum Map {
 		}
 	}
 	
-	public boolean arePairsComplete() {
-		
+	public boolean arePairsComplete() {		
 		if(pairs.size() == SIZE)
 			return true;
 		
@@ -61,18 +57,21 @@ public enum Map {
 	}
 	
 	private float distance(Element element1, Element element2){
-		    return (float) sqrt(
-		    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
-		                 (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
-		               );
+	    return (float) sqrt(
+	    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
+	                 (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
+	               );
 	}
 	
 	private float bruteForce(ArrayList<Element> elements){ 
-	    float min = 6000; 
-	    for (int i = 0; i < elements.size(); ++i) 
-	        for (int j = i+1; j < elements.size(); ++j) 
-	            if (distance(elements.get(i), elements.get(j)) < min) 
-	                min = distance(elements.get(i), elements.get(j)); 
+	    float min = 10000; 
+	    for (int i = 0; i < (elements.size() - 1); ++i) {
+	        for (int j = i + 1; j < elements.size(); ++j) { 
+	            if (distance(elements.get(i), elements.get(j)) < min) {
+	                min = distance(elements.get(i), elements.get(j));
+	            }
+	        }
+	    }
 	    return min; 
 	}
 	
@@ -86,62 +85,83 @@ public enum Map {
 		}
 	}
 	
+	private float stripClosest(ArrayList<Element> strip) {
+		ArrayList<Element> stripSortedByY = sortByY(strip);
+		
+		for (int i = 0; i < stripSortedByY.size(); ++i) {
+			for (int j = i + 1; j < stripSortedByY.size() && ((stripSortedByY.get(j).getY() - strip.get(i).getY()) < minorDistance); ++j) {
+				if (distance(stripSortedByY.get(i), stripSortedByY.get(j)) < minorDistance) {
+					minorDistance = distance(stripSortedByY.get(i), stripSortedByY.get(j));
+				}
+			}
+		}
+		
+		return minorDistance;
+	}
+	
 	public Float closestPair(ArrayList<Element> elements){
-//		System.out.println("Tam Elemenst:" + elements.size());
 //		for(int i=0; i<elements.size(); i++) {
-//			System.out.println("Elem" + i + ": " + elements.get(i).getX());
+//			System.out.println("Elem (" + elements.get(i).getX() + ", " + elements.get(i).getY() + ")");
 //		}
-//		
+//		System.out.println("__________________________________________");
+		
 		if(elements.size() == 3 || elements.size() == 2) {
-			return (float) bruteForce(elements);
+			minorDistance = bruteForce(elements);
+			return minorDistance;
 		}
 		else if(elements.size() == 1) {
-			return (float) 6000;
+			return (float) 10000;
 		}
 
 		Float medianPoint = getMedianPoint(elements);
 		
+		
 //		System.out.println("MedianPoint: " + medianPoint);
+		
+//		System.out.println("MD1: " + minorDistance);
 		
 		ArrayList<Element> left = new ArrayList<Element>();
 		ArrayList<Element> right = new ArrayList<Element>();
 		
 		for(int i = 0; i < elements.size(); i++) {
-			if(elements.get(i).getX() < medianPoint) {				
+			if(elements.get(i).getX() <= medianPoint) {
+				//System.out.println("Elem" + i + " - Left ");
 				left.add(elements.get(i));
 			}
 			else{				
 				right.add(elements.get(i));
+				//System.out.println("Elem" + i + " - Right ");
 			}
 		}
+//		System.out.println("MDA2: " + minorDistance);
 		
-		minorDistance = min(closestPair(left), closestPair(right));
+		float dl = closestPair(left);
+		float dr = closestPair(right);
 		
-		ArrayList<Element> strip = new ArrayList<Element>();
-		ArrayList<Element> sortedElementsByY = sortByY(elements);
+		float dis = min(dl, dr);
+		if (dis < minorDistance) {
+			minorDistance = dis;
+		}
+		
+//		System.out.println("MD2: " + minorDistance);
+		
+		ArrayList<Element> strip = new ArrayList<Element>();		
 		for(int i = 0; i < elements.size(); i++) {
-			if((abs(sortedElementsByY.get(i).getX() - medianPoint)) < minorDistance) {
-				strip.add(sortedElementsByY.get(i));
+			if((abs(elements.get(i).getX() - medianPoint)) <= minorDistance) {
+				strip.add(elements.get(i));
 			}
 		}
-		
-		for (int i = 0; i < strip.size(); i++) {
-			for (int j = (i + 1); j <= (i + 6) && (i + j < strip.size()); j++) {
-				float distanceCompare = distance(strip.get(i), strip.get(j));
-				if(min(minorDistance, distanceCompare) == distanceCompare) {
-					minorDistance = distanceCompare;
-				}
-			}
-		}
-		return minorDistance;
+//		System.out.println("MD3: " + minorDistance);
+		return min(minorDistance, stripClosest(strip));
 		
 	}
 	
 	public void printDistances() {
-		float min = 6000;
-		for (int i = 0; i < elements.size(); i++) {
+		float min = 10000;
+		for (int i = 0; i < elements.size() -1; i++) {
 			for (int j = (i+1); j < elements.size(); j++) {
 				//System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));
+				//System.out.println("Distância (" + i + ", " + j + "): " + distance(elements.get(i), elements.get(j)));
 				if(distance(elements.get(i), elements.get(j)) < min){
 					min = distance(elements.get(i), elements.get(j));
 				}
