@@ -68,8 +68,9 @@ public class MainFrame extends JFrame implements ActionListener{
 				map.minorDistanceHashMap = (float)10000;
 				map.printDistances();
 				System.out.println("Menor distancia: " + map.closestPair(map.elements));
-				System.out.println("Par: (" + ((Element)map.pair.get("primaryPair")).getX() + "," + ((Element)map.pair.get("primaryPair")).getY() + 
-								  "), (" +	((Element)map.pair.get("secondPair")).getX() + "," + ((Element)map.pair.get("secondPair")).getY() + ")");
+//				System.out.println("Par: (" + ((Element)map.pair.get("primaryPair")).getX() + "," + ((Element)map.pair.get("primaryPair")).getY() + 
+//								  "), (" +	((Element)map.pair.get("secondPair")).getX() + "," + ((Element)map.pair.get("secondPair")).getY() + ")");
+				System.out.println("Par: (" + ((Element)map.pair.get("primaryPair")).getType() + "," + ((Element)map.pair.get("secondPair")).getType() + ")");
 				//TODO DELETAR DA LISTA OS PONTOS MAIS PRÓXIMOS	
 			}
 		}

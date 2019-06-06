@@ -11,9 +11,10 @@ public enum Map {
 	public ArrayList<Element> elements =  new ArrayList<>();
 	private HashMap<Element, Element> pairs = new HashMap<Element, Element>();
 	private Float minorDistance = (float) 10000;
+	private Float minorDistanceTemp;
 	public Float minorDistanceHashMap = (float) 10000;
 	public HashMap<String , Element> pair = new HashMap<String, Element>(); 
-		
+
 	public void reset(){
 		elements = new ArrayList<>();
 		pairs = new HashMap<Element, Element>();
@@ -63,17 +64,16 @@ public enum Map {
    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
              (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
            );
-		
-		if (result < minorDistanceHashMap) {
+				
+		if (result < minorDistanceHashMap && element1.getType() != element2.getType()) {
 			addInHashMap(element1, element2);
 		}
 			
 	    return result;
 	}
-	
 	private void addInHashMap(Element one, Element two) {
 		float d = distanceTeste(one, two);
-		System.out.println("Entrou: " + d);
+//		System.out.println("Entrou: " + d);
 		if(d < minorDistanceHashMap) {
 			//System.out.println("1:" + minorDistance + " 2:" + distanceTeste(one, two));
 			pair.put("primaryPair", one);
@@ -81,8 +81,8 @@ public enum Map {
 			
 			minorDistanceHashMap = d;
 			
-			System.out.println("ADD: (" + one.getX() + "," + one.getY() + 
-					  "), (" +	two.getX() + "," + two.getY() + "): " + d);
+//			System.out.println("ADD: (" + one.getX() + "," + one.getY() + 
+//					  "), (" +	two.getX() + "," + two.getY() + "): " + d);
 		}
 	}
 	
@@ -99,7 +99,7 @@ public enum Map {
 	    float min = 10000; 
 	    for (int i = 0; i < (elements.size() - 1); ++i) {
 	        for (int j = i + 1; j < elements.size(); ++j) { 
-	            if (distance(elements.get(i), elements.get(j)) < min) {
+	            if (distance(elements.get(i), elements.get(j)) < min && elements.get(i).getType() != elements.get(j).getType()) {
 	            	addInHashMap(elements.get(i), elements.get(j));
 	                min = distance(elements.get(i), elements.get(j));
 	            }
@@ -124,7 +124,10 @@ public enum Map {
 		
 		for (int i = 0; i < stripSortedByY.size(); ++i) {
 			for (int j = i + 1; j < stripSortedByY.size() && ((stripSortedByY.get(j).getY() - strip.get(i).getY()) < minorDistance); ++j) {
-				minorDistance = distance(stripSortedByY.get(i), stripSortedByY.get(j));
+				//updateMinorDistance(minorDistance, stripSortedByY.get(i), stripSortedByY.get(j));
+				if((stripSortedByY.get(j).getType() != strip.get(i).getType()))
+					minorDistance = distance(stripSortedByY.get(i), stripSortedByY.get(j));
+				
 				//addInHashMap(stripSortedByY.get(i), stripSortedByY.get(j));
 			}
 		}
@@ -195,12 +198,15 @@ public enum Map {
 			for (int j = (i+1); j < elements.size(); j++) {
 //				System.out.println("Distancia: " + distance(elements.get(i), elements.get(j)));
 				
-				System.out.println("Distância: (" + elements.get(i).getX() + "," + elements.get(i).getY() + 
-						  "), (" +	elements.get(j).getX() + "," + elements.get(j).getY() + ") : " + 
+//				System.out.println("Distância: (" + elements.get(i).getX() + "," + elements.get(i).getY() + 
+//						  "), (" +	elements.get(j).getX() + "," + elements.get(j).getY() + ") : " + 
+//						   distanceTeste(elements.get(i), elements.get(j)));
+				
+				System.out.println("Distância: (" + elements.get(i).getType() + "," + elements.get(j).getType() + ") : " + 
 						   distanceTeste(elements.get(i), elements.get(j)));
 				
 				
-				if(distanceTeste(elements.get(i), elements.get(j)) < min){
+				if(distanceTeste(elements.get(i), elements.get(j)) < min && elements.get(i).getType() != elements.get(j).getType()){
 					Element element1 = elements.get(i);
 					Element element2 = elements.get(j);
 					
