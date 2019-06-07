@@ -76,7 +76,7 @@ public enum Map {
 	    return result;
 	}
 	private void addInHashMap(Element element1, Element element2) {
-		float d = distanceTeste(element1, element2);
+		float d = getDistance(element1, element2);
 		if(d < minorDistanceHashMap) {
 			pairs.put("One", element1);
 			pairs.put("Two", element2);
@@ -85,7 +85,7 @@ public enum Map {
 		}
 	}
 	
-	public float distanceTeste(Element element1, Element element2){
+	public float getDistance(Element element1, Element element2){
 		float result = (float) sqrt(
    			 (element1.getX() - element2.getX())*(element1.getX() - element2.getX()) + 
              (element1.getY() - element2.getY())*(element1.getY() - element2.getY()) 
@@ -99,7 +99,6 @@ public enum Map {
 	    for (int i = 0; i < (elements.size() - 1); ++i) {
 	        for (int j = i + 1; j < elements.size(); ++j) { 
 	            if (distance(elements.get(i), elements.get(j)) < min && elements.get(i).getType() != elements.get(j).getType()) {
-	            	addInHashMap(elements.get(i), elements.get(j));
 	                min = distance(elements.get(i), elements.get(j));
 	            }
 	        }
@@ -123,11 +122,8 @@ public enum Map {
 		
 		for (int i = 0; i < stripSortedByY.size(); ++i) {
 			for (int j = i + 1; j < stripSortedByY.size() && ((stripSortedByY.get(j).getY() - strip.get(i).getY()) < minorDistance); ++j) {
-				//updateMinorDistance(minorDistance, stripSortedByY.get(i), stripSortedByY.get(j));
 				if((stripSortedByY.get(j).getType() != strip.get(i).getType()))
 					minorDistance = distance(stripSortedByY.get(i), stripSortedByY.get(j));
-				
-				//addInHashMap(stripSortedByY.get(i), stripSortedByY.get(j));
 			}
 		}
 		
@@ -195,8 +191,8 @@ public enum Map {
 //						   distanceTeste(elements.get(i), elements.get(j)));
 				
 				
-				if(distanceTeste(elements.get(i), elements.get(j)) < min && elements.get(i).getType() != elements.get(j).getType()){
-					min = distanceTeste(elements.get(i), elements.get(j));
+				if(getDistance(elements.get(i), elements.get(j)) < min && elements.get(i).getType() != elements.get(j).getType()){
+					min = getDistance(elements.get(i), elements.get(j));
 				}
 			}
 		}
